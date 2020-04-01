@@ -14,7 +14,13 @@ public class SelectParam {
     
     private float boost;
     
-    private List<Param> param = new ArrayList<>();
+    private Integer pageSize;
+    
+    private Long limit;
+    
+    private List<Param> selectParam = new ArrayList<>();
+    
+    private List<Param> filterParam = new ArrayList<>();
     
     @Data
     public static class Param {

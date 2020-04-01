@@ -14,6 +14,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 
 import com.movie.search.config.EsConfiguration;
 import com.movie.search.dto.SelectParam;
@@ -26,9 +27,9 @@ public class EsClient {
         throws IOException {
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         getBoolQueryBuilder(builder, param);
-        builder.boost(param.getBoost());
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.query(builder);
+        sourceBuilder.highlighter(new HighlightBuilder());
         SearchRequest request = new SearchRequest(param.getIndex());
         request.types(param.getType());
         request.source(sourceBuilder);
@@ -41,8 +42,8 @@ public class EsClient {
     }
     
     private void getBoolQueryBuilder(BoolQueryBuilder builder, SelectParam param) {
-        List<SelectParam.Param> paramList = param.getParam();
-        paramList.forEach(p -> {
+        List<SelectParam.Param> selectParams = param.getSelectParam();
+        selectParams.forEach(p -> {
             if (p.isMust()) {
                 builder.must(new MatchQueryBuilder(p.getField(), p.getKeyWord()));
             }
@@ -50,5 +51,6 @@ public class EsClient {
                 builder.should(new MatchQueryBuilder(p.getField(), p.getKeyWord()));
             }
         });
+        List<SelectParam.Param> filterParams = param.getFilterParam();
     }
 }

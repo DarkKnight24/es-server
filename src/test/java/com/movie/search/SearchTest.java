@@ -56,7 +56,8 @@ public class SearchTest {
         SelectParam param = new SelectParam();
         param.setIndex("movie");
         param.setType("movie");
-        List<SelectParam.Param> paramList = param.getParam();
+        param.setBoost(2.0f);
+        List<SelectParam.Param> paramList = param.getSelectParam();
         paramList.add(new SelectParam.Param("movie_cn_name", "狮子王", false));
         paramList.add(new SelectParam.Param("movie_actor", "狮子王", false));
         List list = new EsClient().searchByKeyWord(param);
